@@ -81,7 +81,7 @@ cp -r result one_piece_one_page_jp_trans_dir && \
 rm -rf result && \
 
 # Translate a Single Image (English to Chinese)
-export DEEPSEEK_API_KEY="sk-70f16a21d1944405b356ee287d13722d" && \
+export DEEPSEEK_API_KEY="" && \
 python -m manga_translator local -v -i one_piece_one_page.png -f png --config-file config-example-zh-deepseek.json && \
 cp -r result one_piece_one_page_zh_trans_dir && \
 rm -rf result
