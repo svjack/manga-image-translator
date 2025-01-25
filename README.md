@@ -24,7 +24,7 @@ python -m ipykernel install --user --name py310 --display-name "py310"
 git clone https://github.com/svjack/manga-image-translator.git
 cd manga-image-translator
 pip install -r requirements.txt
-pip install "httpx[socks]"
+pip install "httpx[socks]" datasets
 ```
 
 - Source Image
