@@ -6,6 +6,88 @@
 ![Contributors](https://img.shields.io/github/contributors/zyddnys/manga-image-translator)
 [![Discord](https://img.shields.io/discord/739305951085199490?logo=discord&label=discord&logoColor=white)](https://discord.gg/Ak8APNy4vb)
 
+### 1. System Dependency Installation
+```bash
+sudo apt-get update && sudo apt-get install cbm ffmpeg git-lfs
+```
+
+### 2. Python Environment Setup
+```bash
+conda create -n py310 python=3.10
+conda activate py310
+pip install ipykernel
+python -m ipykernel install --user --name py310 --display-name "py310"
+```
+
+### 3. Clone the Project and Install Dependencies
+```bash
+git clone https://github.com/svjack/manga-image-translator.git
+cd manga-image-translator
+pip install -r requirements.txt
+pip install "httpx[socks]"
+```
+
+- Source Image
+
+
+![one_piece_one_page](https://github.com/user-attachments/assets/e4b7bd13-ed37-45e6-867d-24024c050f8f)
+
+### 4. Translate a Single Image (English to Japanese)
+```bash
+python -m manga_translator local -v -i one_piece_one_page.png -f png --config-file config-example-jp.json
+cp -r result one_piece_one_page_jp_trans_dir
+rm -rf result
+```
+
+
+![final](https://github.com/user-attachments/assets/cff9a860-f5f3-4f74-b62d-31ec9b7a35c1)
+
+### 5. Translate a Single Image (English to Chinese)
+```bash
+export DEEPSEEK_API_KEY=""
+python -m manga_translator local -v -i one_piece_one_page.png -f png --config-file config-example-zh-deepseek.json
+cp -r result one_piece_one_page_zh_trans_dir
+rm -rf result
+```
+
+
+![final (1)](https://github.com/user-attachments/assets/57b5260a-c41d-424f-a255-66c8702d2560)
+
+---
+
+## Combined Command
+
+Here is the entire process combined into a single command for convenience:
+
+```bash
+# System Dependency Installation
+sudo apt-get update && sudo apt-get install cbm ffmpeg git-lfs && \
+
+# Python Environment Setup
+conda create -n py310 python=3.10 && \
+conda activate py310 && \
+pip install ipykernel && \
+python -m ipykernel install --user --name py310 --display-name "py310" && \
+
+# Clone the Project and Install Dependencies
+git clone https://github.com/svjack/manga-image-translator.git && \
+cd manga-image-translator && \
+pip install -r requirements.txt && \
+pip install "httpx[socks]" && \
+
+# Translate a Single Image (English to Japanese)
+python -m manga_translator local -v -i one_piece_one_page.png -f png --config-file config-example-jp.json && \
+cp -r result one_piece_one_page_jp_trans_dir && \
+rm -rf result && \
+
+# Translate a Single Image (English to Chinese)
+export DEEPSEEK_API_KEY="sk-70f16a21d1944405b356ee287d13722d" && \
+python -m manga_translator local -v -i one_piece_one_page.png -f png --config-file config-example-zh-deepseek.json && \
+cp -r result one_piece_one_page_zh_trans_dir && \
+rm -rf result
+```
+
+
 
 > Translate texts in manga/images.\
 > [中文说明](README_CN.md) | [Change Log](CHANGELOG.md) \
