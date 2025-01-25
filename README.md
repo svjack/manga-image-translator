@@ -29,7 +29,6 @@ pip install "httpx[socks]"
 
 - Source Image
 
-
 ![one_piece_one_page](https://github.com/user-attachments/assets/e4b7bd13-ed37-45e6-867d-24024c050f8f)
 
 ### 4. Translate a Single Image (English to Japanese)
@@ -38,7 +37,6 @@ python -m manga_translator local -v -i one_piece_one_page.png -f png --config-fi
 cp -r result one_piece_one_page_jp_trans_dir
 rm -rf result
 ```
-
 
 ![final](https://github.com/user-attachments/assets/cff9a860-f5f3-4f74-b62d-31ec9b7a35c1)
 
@@ -49,7 +47,6 @@ python -m manga_translator local -v -i one_piece_one_page.png -f png --config-fi
 cp -r result one_piece_one_page_zh_trans_dir
 rm -rf result
 ```
-
 
 ![final (1)](https://github.com/user-attachments/assets/57b5260a-c41d-424f-a255-66c8702d2560)
 
@@ -85,6 +82,51 @@ export DEEPSEEK_API_KEY="" && \
 python -m manga_translator local -v -i one_piece_one_page.png -f png --config-file config-example-zh-deepseek.json && \
 cp -r result one_piece_one_page_zh_trans_dir && \
 rm -rf result
+```
+
+---
+
+## Translating a PDF File (Split into Pages)
+
+### 1. Split and Translate a PDF File
+
+#### Example PDF
+`One_Piece_[0001]_Chapter_1.pdf` (obtained from https://github.com/svjack/mangal)
+
+```bash
+# Install required tools
+sudo apt-get update
+sudo apt-get install poppler-utils
+
+# Split PDF into individual pages and save as PDFs
+mkdir One_Piece_0001_Chapter_1_dir
+pdfseparate "One_Piece_[0001]_Chapter_1.pdf" One_Piece_0001_Chapter_1_dir/page_%04d.pdf
+
+# Split PDF into individual pages and save as PNGs
+mkdir -p One_Piece_0001_Chapter_1_pngs
+pdftoppm -png "One_Piece_[0001]_Chapter_1.pdf" One_Piece_0001_Chapter_1_pngs/page
+
+# Translate the PNGs (English to Chinese)
+python -m manga_translator local -v -i One_Piece_0001_Chapter_1_pngs -f png --config-file config-example-zh-deepseek.json && \
+cp -r result one_piece_chp1_zh_trans_dir && \
+rm -rf result
+
+# Rename the translated directory
+cp -p -r One_Piece_0001_Chapter_1_pngs-translated One_Piece_0001_Chapter_1_pngs-translated-zh
+
+# Clean up
+rm -rf One_Piece_0001_Chapter_1_pngs-translated
+
+# Translate the PNGs (English to Japanese)
+python -m manga_translator local -v -i One_Piece_0001_Chapter_1_pngs -f png --config-file config-example-jp.json && \
+cp -r result one_piece_chp1_jp_trans_dir && \
+rm -rf result
+
+# Rename the translated directory
+cp -p -r One_Piece_0001_Chapter_1_pngs-translated One_Piece_0001_Chapter_1_pngs-translated-jp
+
+# Clean up
+rm -rf One_Piece_0001_Chapter_1_pngs-translated
 ```
 
 
