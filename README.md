@@ -83,8 +83,67 @@ python -m manga_translator local -v -i one_piece_one_page.png -f png --config-fi
 cp -r result one_piece_one_page_zh_trans_dir && \
 rm -rf result
 ```
+- To Huggingface HUB
+```python
+!pip install datasets
+!huggingface-cli login
 
----
+import os
+from datasets import Dataset, Image
+from collections import defaultdict
+
+# 定义三个路径
+path_en = "One_Piece_0001_Chapter_1_pngs"
+path_zh = "One_Piece_0001_Chapter_1_pngs-translated-zh"
+path_jp = "One_Piece_0001_Chapter_1_pngs-translated-jp"
+
+# 获取所有图片文件名
+en_files = set(os.listdir(path_en))
+zh_files = set(os.listdir(path_zh))
+jp_files = set(os.listdir(path_jp))
+
+en_files, zh_files, jp_files = map(lambda l: 
+                                   set(filter(lambda x: x.endswith(".png"), l))
+                                   , [en_files, zh_files, jp_files])
+
+# 找到三个路径中同名的图片文件
+common_files = en_files.intersection(zh_files).intersection(jp_files)
+
+# 构建数据集
+data = defaultdict(list)
+
+for file in sorted(common_files):  # 按文件名排序
+    data["image-name"].append(file)  # 图片文件名
+    data["en-image"].append(os.path.join(path_en, file))  # 英文图片路径
+    data["zh-image"].append(os.path.join(path_zh, file))  # 中文图片路径
+    data["jp-image"].append(os.path.join(path_jp, file))  # 日文图片路径
+
+# 创建 Hugging Face Dataset
+dataset = Dataset.from_dict(data)
+
+# 添加图片列
+dataset = dataset.cast_column("en-image", Image())
+dataset = dataset.cast_column("zh-image", Image())
+dataset = dataset.cast_column("jp-image", Image())
+
+# 按 image-name 排序
+dataset = dataset.sort("image-name")
+
+# 打印数据集
+print(dataset)
+
+# 保存数据集（可选）
+dataset.save_to_disk("One_Piece_Chapter1_Manga_En_Zh_Jp")
+
+dataset.push_to_hub("svjack/One_Piece_Chapter1_Manga_En_Zh_Jp")
+```
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
 
 ## Translating a PDF File (Split into Pages)
 
